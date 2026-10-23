@@ -1,0 +1,40 @@
+{
+  "question": "In a simple sparse-reward gridworld with an imperfect oracle, can an adaptively calibrated, oracle-reliability-aware critic-uncertainty rule learn more sample-efficiently than a fixed-threshold critic-uncertainty rule (CCGE-style)?",
+  "method": "Seeded 12x12 walled sparse-reward gridworld in numpy with a region-dependent imperfect oracle; tabular Q-learning with 5 bootstrapped critics, same exploration schedule and 150-episode budget for both agents; greedy evaluation every 5 episodes on fixed held-out start cells; 3 master seeds (42,43,44) x 10 shared run seeds.",
+  "dataset": {
+    "name": "Simulated sparse-reward gridworld with imperfect oracle",
+    "source_url": "none (simulated in numpy)",
+    "n_rows": 123,
+    "n_train": 92,
+    "n_test": 31,
+    "same_as_paper": false,
+    "baseline_is_papers_method": false
+  },
+  "metric_name": "mean greedy-evaluation success rate over training (area under learning curve)",
+  "higher_is_better": true,
+  "baseline": "Fixed-threshold rule: follow the oracle action when ensemble std of Q at the state exceeds a fixed threshold (tuned on train start cells); simplified tabular stand-in for CCGE.",
+  "improved": "Threshold is a running quantile of observed uncertainty, and a per-region oracle-reliability estimate (critic value of oracle vs greedy action, plus realised success) gates deferral to the oracle.",
+  "metrics": {
+    "baseline_score": 0.08695340501792113,
+    "baseline_score_std": 0.007664554210536865,
+    "baseline_final": 0.1333333333333333,
+    "baseline_final_std": 0.012447136454613143,
+    "baseline_episodes_to_80": 150.0,
+    "baseline_episodes_to_80_std": 0.0,
+    "baseline_oracle_frac": 0.4582026680490738,
+    "baseline_oracle_frac_std": 0.03876291389141565,
+    "improved_score": 0.14494623655913974,
+    "improved_score_std": 0.006821533399265372,
+    "improved_final": 0.22150537634408599,
+    "improved_final_std": 0.010644618211410386,
+    "improved_episodes_to_80": 150.0,
+    "improved_episodes_to_80_std": 0.0,
+    "improved_oracle_frac": 0.22083140365346396,
+    "improved_oracle_frac_std": 0.002353332737246169,
+    "improvement": 0.057992831541218606,
+    "baseline_param": 0.04,
+    "improved_param": 0.5,
+    "oracle_optimal_action_fraction": 0.5609756097560976
+  },
+  "notes": "Simplified tabular stand-in, not the paper's actor-critic CCGE. Test set = held-out start cells (25% of free cells); hyper-parameters (threshold / quantile) chosen on separate seeds using training start cells only; other constants fixed a priori. Episodes-to-80% is censored at 150 if never reached. Realised-return evidence for reliability is noisy (a failed episode penalises all oracle steps in it). Results depend on the simulated oracle quality and layout."
+}
